@@ -32,6 +32,24 @@ def log_entry():
     filename = filename_param + ".txt"
     path = Path(user_dir + "/" + filename)
     # vulnerability: Directory Traversal
+    '''
+    ***************** OpenRefactory Warning *****************
+    Possible Path manipulation attack!
+    Path:
+    	File: actions.py, Line: 19
+    		filename_param = request.form.get("filename")
+    		Variable filename_param is assigned a tainted value from an external source.
+    	File: actions.py, Line: 32
+    		filename = filename_param + ".txt"
+    		Variable filename is assigned a tainted value.
+    	File: actions.py, Line: 33
+    		path = Path(user_dir + "/" + filename)
+    		Variable path is assigned a tainted value which is passed through a method invocation.
+    	File: actions.py, Line: 35
+    		with path.open("w", encoding="utf-8") as open_file:
+    		        open_file.write(text_param)
+    		Tainted information is used in a sink.
+    '''
     with path.open("w", encoding="utf-8") as open_file:
         open_file.write(text_param)
     return jsonify({"success": True})
