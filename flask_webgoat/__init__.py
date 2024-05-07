@@ -11,6 +11,29 @@ def query_db(query, args=(), one=False, commit=False):
     with sqlite3.connect(DB_FILENAME) as conn:
         # vulnerability: Sensitive Data Exposure
         conn.set_trace_callback(print)
+        '''
+        ***************** OpenRefactory Warning *****************
+        Possible SQL injection!
+        Path:
+        	File: auth.py, Line: 9
+        		username = request.form.get("username")
+        		Variable username is assigned a tainted value from an external source.
+        	File: auth.py, Line: 10
+        		password = request.form.get("password")
+        		Variable password is assigned a tainted value from an external source.
+        	File: auth.py, Line: 18
+        		query = (
+        		        "SELECT id, username, access_level FROM user WHERE username = '%s' AND password = '%s'"
+        		        % (username, password)
+        		    )
+        		Variable query is assigned a tainted value.
+        	File: auth.py, Line: 22
+        		result = query_db(query, [], True)
+        		Tainted information is passed through a method call via query to the formal parameter query of the method.
+        	File: __init__.py, Line: 14
+        		cur = conn.cursor().execute(query, args)
+        		Tainted information is used in a sink.
+        '''
         cur = conn.cursor().execute(query, args)
         if commit:
             conn.commit()
