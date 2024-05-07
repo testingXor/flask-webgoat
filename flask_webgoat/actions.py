@@ -59,6 +59,21 @@ def log_entry():
 def grep_processes():
     name = request.args.get("name")
     # vulnerability: Remote Code Execution
+    '''
+    ***************** OpenRefactory Warning *****************
+    Possible OS command injection!
+    Path:
+    	File: actions.py, Line: 42
+    		name = request.args.get("name")
+    		Variable name is assigned a tainted value from an external source.
+    	File: actions.py, Line: 44
+    		res = subprocess.run(
+    		        ["ps aux | grep " + name + " | awk '{print $11}'"],
+    		        shell=True,
+    		        capture_output=True,
+    		    )
+    		Tainted information is used in a sink.
+    '''
     res = subprocess.run(
         ["ps aux | grep " + name + " | awk '{print $11}'"],
         shell=True,
